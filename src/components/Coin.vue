@@ -8,7 +8,7 @@
         <div class="container has-text-centered">
           <h1 class="title">{{ coinData.id }}</h1>
 
-          <highstock :options="chartData"></highstock>
+          <highstock :options="chartData" ref="chartRef"></highstock>
 
           <!-- <div class="columns top-currencies">
             <div class="column currency-box" v-for="currency of topCurrencies" :key="currency.short">
@@ -51,6 +51,7 @@ import Navbar from '@/components/Navbar'
 
 export default {
   name: 'Coin',
+
   data() {
     return {
       coinData: {},
@@ -59,34 +60,134 @@ export default {
   },
 
   created() {
-      axios.get(`http://coincap.io/page/${this.$route.params.coin}`)
-      .then(response => {
-        // JSON responses are automatically parsed.
+      this.loadCoin(this.$route.params.coin).then(response => {
         this.coinData = response.data;
       })
 
-      axios.get(`http://coincap.io/history/1day/${this.$route.params.coin}`)
-      .then(response => {
-        // JSON responses are automatically parsed.
-        this.chartData = this.formatChartData(response.data.price);
+      this.loadChart(this.$route.params.coin).then(response => {
+        this.chartData = this.formatChartData(this.$route.params.coin, response.data.price, this.$eurToUsd);
       })
   },
 
   methods: {
-    formatChartData: (data) => {
+    loadCoin: function (coin) {
+      return axios.get(`http://coincap.io/page/${coin}`);
+    },
+    loadChart: function (coin, scale = '7day') {
+      return axios.get(`http://coincap.io/history/${scale}/${coin}`);
+    },
+    rangeChanged: function (range) {
+      const apiRange = this.selectionToString(range);
+      const { chart } = this.$refs.chartRef;
+      console.log(range);
+
+      chart.showLoading('Loading data from server...');
+
+      this.loadChart(this.$route.params.coin, apiRange)
+      .then((response) => {
+        chart.series[0].setData(response.data.price);
+        chart.xAxis[0].setExtremes();
+        // chart.rangeSelector.clickButton(1, false);
+        // console.log(chart.series[0].data);
+        console.log('Loading done');
+        // chart.redraw();
+        chart.hideLoading();
+      });
+    },
+    selectionToString: function (range) {
+      switch (range.type) {
+        case 'day':
+          return '1day';
+        case 'week':
+          return '7day';
+        case 'month':
+          return '30day';
+        case 'year':
+        default:
+          return '365day';
+      }
+    },
+    formatChartData: function (coin, chartData, eurRate) {
+      chartData = _.map(chartData, (item) => {
+        item[1] = parseFloat((item[1] / eurRate).toFixed());
+
+        return item;
+      })
+
+      let vm = this;
+
       return {
         rangeSelector: {
-          inputEnabled: false
+          selected: 1,
+          allButtonsEnabled: true,
+          inputEnabled: false,
+          buttons: [
+          {
+            type: 'day',
+            count: 1,
+            text: '1 deň'
+          }, {
+            type: 'week',
+            count: 1,
+            text: '1 týždeň'
+          }, {
+            type: 'month',
+            count: 1,
+            text: '1 mesiac'
+          }, {
+            type: 'year',
+            count: 1,
+            text: '1 rok'
+          }],
+          buttonSpacing: 20,
+          buttonTheme: {
+            fill: 'none',
+            stroke: 'none',
+            'stroke-width': 0,
+            r: 6,
+            width: 80,
+            style: {
+                color: '#FDFDFD'
+            },
+            states: {
+                hover: {
+                  fill: 'rgba(255,255,255,0.3)',
+                  style: {
+                    color: '#FFF'
+                  }
+                },
+                select: {
+                  fill: '#FFF',
+                  style: {
+                    color: '#202020'
+                  }
+                }
+            }
+          },
+          buttonPosition: {
+            align: 'center',
+            x: -30
+          },
+          labelStyle : {
+            color: 'transparent'
+          }
         },
         chart: {
-          backgroundColor: null
+          backgroundColor: null,
+          panning: false
         },
         scrollbar: {
           enabled: false
         },
+        navigator: {
+          enabled: false
+        },
+        credits: {
+          enabled: false
+        },
         series: [{
-            name: 'lel',
-            data: data,
+            name: coin,
+            data: chartData,
             type: 'areaspline',
             threshold: null,
             tooltip: {
@@ -106,14 +207,49 @@ export default {
                 ]
             }
         }],
+        tooltip: {
+          formatter: function() {
+              var s = '<b>' + Highcharts.dateFormat('%A, %b %e, %Y', this.x) + '</b>';
+
+              _.forEach(this.points, () => {
+                  s += '<br/>1 '+coin+' = '+this.y+' EUR';
+              });
+
+              return s;
+          },
+          borderWidth: 0
+        },
         yAxis: {
-          gridLineWidth: 0,
+          labels: {
+            format: '€ {value}',
+            style: {
+              color: '#FFF',
+              fontSize: '12px'
+            }
+          },
+          gridLineDashStyle: 'Dot',
+          tickColor: '#FFFFF',
           minorGridLineWidth: 0,
-          gridLineColor: 'transparent'
+          gridLineColor: 'rgba(255,255,255,0.2)'
         },
         xAxis: {
+          crosshair: {
+            color: 'rgba(255,255,255,0.5)',
+            label: {
+              borderRadius: 0,
+
+            }
+          },
+          visible: false,
           gridLineWidth: 0,
-          minorGridLineWidth: 0
+          minorGridLineWidth: 0,
+          events: {
+            setExtremes: function(e) {
+              if(typeof(e.rangeSelectorButton)!== 'undefined') {
+                vm.rangeChanged(e.rangeSelectorButton)
+              }
+            }
+          }
         }
       };
     }

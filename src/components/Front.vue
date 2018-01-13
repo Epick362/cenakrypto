@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import axios from 'axios'
 import _ from 'lodash'
 import Navbar from '@/components/Navbar'
@@ -58,18 +59,8 @@ export default {
   },
 
   created() {
-      axios.get(`https://api.fixer.io/latest?base=EUR`)
-      .then(response => {
-        let eurToUsd = _.get(response.data, "rates.USD");
-
-        if (eurToUsd) {
-          this.eurRate = eurToUsd;
-        }
-      })
-
       axios.get(`http://coincap.io/front`)
       .then(response => {
-        // JSON responses are automatically parsed.
         this.topCurrencies = response.data.slice(0, 3);
         this.smallCurrencies = response.data.slice(3, 10);
       })
