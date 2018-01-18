@@ -6,39 +6,51 @@
       </div>
       <div class="hero-body">
         <div class="container has-text-centered">
-          <h1 class="title">{{ coinData.id }}</h1>
+          <h1 class="currency-name">
+            <span class="currency-short">{{ coinData.id }}</span>
+            {{ coinData.display_name }}
+          </h1>
 
-          <highstock :options="chartData" ref="chartRef"></highstock>
-
-          <!-- <div class="columns top-currencies">
-            <div class="column currency-box" v-for="currency of topCurrencies" :key="currency.short">
-              <div class="currency-name">1 {{ currency.short }}</div>
-              <div class="current-price">€ {{ (currency.price / eurRate).toFixed(2) }}</div>
-              <div class="currency-change" v-bind:class="[currency.perc >= 0 ? 'green' : 'red']">
-                {{ currency.perc }}%
-                <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
-                <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
-              </div>
-            </div>
+          <div class="currency-main">
+            <span class="currency-price">
+              € {{ (coinData.price / this.$eurToUsd).toFixed(2) }}
+            </span>
+            <span class="currency-change" v-bind:class="[coinData.cap24hrChange >= 0 ? 'green' : 'red']">
+                {{ coinData.cap24hrChange }}%
+                <i v-if="coinData.cap24hrChange >= 0" class="fas fa-chevron-up" />
+                <i v-if="coinData.cap24hrChange < 0" class="fas fa-chevron-down" />
+              </span>
           </div>
 
-          <div class="columns small-currencies">
-            <div class="column currency-box-small" v-for="currency of smallCurrencies" :key="currency.short">
-              <div class="currency-name">{{ currency.short }}</div>
-              <div class="current-price">€ {{ (currency.price / eurRate).toFixed(2) }}</div>
-              <div class="currency-change" v-bind:class="[currency.perc >= 0 ? 'green' : 'red']">
-                {{ currency.perc }}%
-                <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
-                <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
-              </div>
+          <div class="columns currency-details">
+            <div class="column">
+              <div class="currency-detail-price">€ +300</div>
+              <div class="currency-detail-type">1 week change</div>
             </div>
-          </div> -->
+            <div class="column">
+              <div class="currency-detail-price">€ 2000</div>
+              <div class="currency-detail-type">1 week low</div>
+            </div>
+            <div class="column">
+              <div class="currency-detail-price">€ 2570</div>
+              <div class="currency-detail-type">1 week high</div>
+            </div>
+            <div class="column">
+              <div class="currency-detail-price">€ 3.5mld</div>
+              <div class="currency-detail-type">Volume</div>
+            </div>
+            <div class="column">
+              <div class="currency-detail-price">€ 160mld</div>
+              <div class="currency-detail-type">Market Cap</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="container">
-      {{ coinData.id }}
+      <h2>História ceny</h2>
+      <highstock :options="chartData" ref="chartRef"></highstock>
     </section>
   </div>
 </template>
@@ -65,7 +77,7 @@ export default {
       })
 
       this.loadChart(this.$route.params.coin).then(response => {
-        this.chartData = this.formatChartData(this.$route.params.coin, response.data.price, this.$eurToUsd);
+        this.chartData = this.formatChartData(this.$route.params.coin, response.data.price);
       })
   },
 
@@ -85,12 +97,9 @@ export default {
 
       this.loadChart(this.$route.params.coin, apiRange)
       .then((response) => {
+        let priceData = this.convertToEur(response.data.price);
         chart.series[0].setData(response.data.price);
         chart.xAxis[0].setExtremes();
-        // chart.rangeSelector.clickButton(1, false);
-        // console.log(chart.series[0].data);
-        console.log('Loading done');
-        // chart.redraw();
         chart.hideLoading();
       });
     },
@@ -107,12 +116,15 @@ export default {
           return '365day';
       }
     },
-    formatChartData: function (coin, chartData, eurRate) {
-      chartData = _.map(chartData, (item) => {
-        item[1] = parseFloat((item[1] / eurRate).toFixed());
+    convertToEur: function(priceData) {
+      return _.map(priceData, (item) => {
+        item[1] = parseFloat((item[1] / this.$eurToUsd).toFixed(2));
 
         return item;
-      })
+      });
+    },
+    formatChartData: function (coin, chartData) {
+      chartData = this.convertToEur(chartData);
 
       let vm = this;
 
@@ -262,6 +274,53 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/variables';
 
+.currency-name {
+  font-weight: 300;
+  font-size: 2.5rem;
+
+  .currency-short {
+    display: 'inline-block';
+    font-weight: 700;
+    margin-right: '10px';
+  }
+}
+
+.currency-main {
+  .currency-price {
+    font-weight: 700;
+    font-size: 3.5rem;
+    letter-spacing: -4px;
+  }
+
+  .currency-change {
+    font-weight: 300;
+    font-size: 2rem;
+
+    &.red {
+      color: $red;
+    }
+
+    &.green {
+      color: $green;
+    }
+  }
+}
+
+.currency-details {
+  margin: 2.5rem 0;
+}
+
+.currency-detail {
+  &-price {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  &-type {
+    font-size: 1.4rem;
+  }
+}
 </style>

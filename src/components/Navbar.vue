@@ -2,11 +2,11 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item">
+        <router-link class="navbar-item" to="/">
           <span class="icon">
             <i class="fas fa-gem" />
           </span>
-        </a>
+        </router-link>
         <span class="navbar-burger burger" data-target="navbarMenu">
           <span />
           <span />
