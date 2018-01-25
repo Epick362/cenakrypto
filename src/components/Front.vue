@@ -99,7 +99,7 @@ export default {
 }
 
 .small-currencies {
-  margin: 2rem 5rem;
+  margin: 2rem 0;
 }
 
 .currency-box {

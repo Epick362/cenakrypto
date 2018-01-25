@@ -20,7 +20,7 @@
         </div>
         <div class="navbar-end">
           <span class="navbar-item">
-            <a class="button is-white is-outlined is-small" href="#">
+            <a class="button is-white is-outlined is-small" target="_blank" href="https://www.coinbase.com/join/594d5ece3f676a05e495611b">
               <span class="icon">
                 <i class="fas fa-shopping-cart" />
               </span>

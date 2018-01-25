@@ -22,35 +22,51 @@
               </span>
           </div>
 
-          <div class="columns currency-details">
+          <div v-if="loading == false" class="columns currency-details">
             <div class="column">
-              <div class="currency-detail-price">€ +300</div>
-              <div class="currency-detail-type">1 week change</div>
+              <div class="currency-detail-price" v-bind:class="[priceStats.change >= 0 ? 'green' : 'red']">
+                € {{ priceStats.change }}
+              </div>
+              <div class="currency-detail-type">{{ chartRange.text }} zmena</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ 2000</div>
-              <div class="currency-detail-type">1 week low</div>
+              <div class="currency-detail-price">€ {{ priceStats.low }}</div>
+              <div class="currency-detail-type">{{ chartRange.text }} min.</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ 2570</div>
-              <div class="currency-detail-type">1 week high</div>
+              <div class="currency-detail-price">€ {{ priceStats.high }}</div>
+              <div class="currency-detail-type">{{ chartRange.text }} max.</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ 3.5mld</div>
-              <div class="currency-detail-type">Volume</div>
+              <div class="currency-detail-price">€ {{ marketStats.volume }}</div>
+              <div class="currency-detail-type">24h objem</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ 160mld</div>
-              <div class="currency-detail-type">Market Cap</div>
+              <div class="currency-detail-price">€ {{ marketStats.cap }}</div>
+              <div class="currency-detail-type">Kapitalizácia</div>
             </div>
+          </div>
+
+          <div v-if="loading == true">
+            <loader :loading="loading"></loader>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="container">
-      <h2>História ceny</h2>
-      <highstock :options="chartData" ref="chartRef"></highstock>
+    <section class="container currency-chart">
+      <h2 class="chart-title">
+        Vývoj ceny
+        <span class="is-pulled-right">
+          <span v-bind:class="[priceStats.change_percent >= 0 ? 'green' : 'red']">
+            {{ priceStats.change_percent }}%
+            <i v-if="priceStats.change_percent >= 0" class="fas fa-chevron-up" />
+            <i v-if="priceStats.change_percent < 0" class="fas fa-chevron-down" />
+          </span>
+        </span>
+        
+      </h2>
+      <highstock :options="chartOptions" ref="chartRef"></highstock>
     </section>
   </div>
 </template>
@@ -58,8 +74,12 @@
 <script>
 import axios from 'axios'
 import _ from 'lodash'
-import Highcharts from 'highcharts';
+import Highcharts from 'highcharts'
 import Navbar from '@/components/Navbar'
+import Loader from '@/components/Loader'
+import numAbbr from 'number-abbreviate'
+
+const shortNumberAbbr = new numAbbr([' tisíc', ' m.', ' mld.', ' bilion'])
 
 export default {
   name: 'Coin',
@@ -67,40 +87,91 @@ export default {
   data() {
     return {
       coinData: {},
-      chartData: {}
+      chartOptions: {},
+      chartRange: {
+        type: 'week',
+        count: 1,
+        text: '1 týždeň'
+      },
+      priceData: [],
+      marketStats: {},
+      loading: false
     };
   },
 
-  created() {
-      this.loadCoin(this.$route.params.coin).then(response => {
-        this.coinData = response.data;
-      })
+  computed: {
+    priceStats: function() {
+      if (this.priceData.length <= 0) {
+        return {};
+      }
 
-      this.loadChart(this.$route.params.coin).then(response => {
-        this.chartData = this.formatChartData(this.$route.params.coin, response.data.price);
-      })
+      let low = _.minBy(this.priceData, (price) => price[1])[1];
+      let high = _.maxBy(this.priceData, (price) => price[1])[1];
+      let change = high - low;
+
+      return {
+        change: (change).toFixed(2),
+        change_percent: (change * 100 / low).toFixed(2),
+        low: (low).toFixed(2),
+        high: (high).toFixed(2)
+      };
+    }
+  },
+
+  created() {
+    this.chartOptions = this.formatChartOptions(this.$route.params.coin);
+    
+    this.loadCoin(this.$route.params.coin).then(response => {
+      this.coinData = response.data;
+    })
+  },
+
+  mounted() {
+      this.loadChart(this.$route.params.coin);
   },
 
   methods: {
     loadCoin: function (coin) {
-      return axios.get(`http://coincap.io/page/${coin}`);
+      this.loading = true;
+
+      return axios.get(`http://coincap.io/page/${coin}`)
+      .then((response) => {
+        this.loading = false;
+
+        this.marketStats = {
+          volume: shortNumberAbbr.abbreviate(response.data.volume/this.$eurToUsd, 1),
+          cap: shortNumberAbbr.abbreviate(response.data.market_cap/this.$eurToUsd, 1)
+        };
+
+        return response;
+      });
     },
     loadChart: function (coin, scale = '7day') {
-      return axios.get(`http://coincap.io/history/${scale}/${coin}`);
+      const { chart } = this.$refs.chartRef;
+      this.loading = true;
+
+      return axios.get(`http://coincap.io/history/${scale}/${coin}`)
+      .then((response) => {
+        this.loading = false;
+        let priceData = this.convertToEur(response.data.price);
+        this.priceData = priceData;
+        chart.series[0].setData(priceData);
+        chart.xAxis[0].setExtremes();
+
+        return response;
+      })
     },
     rangeChanged: function (range) {
-      const apiRange = this.selectionToString(range);
       const { chart } = this.$refs.chartRef;
-      console.log(range);
+      const apiRange = this.selectionToString(range);
 
-      chart.showLoading('Loading data from server...');
+      this.chartRange = range;
+
+      // chart.showLoading('Loading data from server...');
 
       this.loadChart(this.$route.params.coin, apiRange)
-      .then((response) => {
-        let priceData = this.convertToEur(response.data.price);
-        chart.series[0].setData(response.data.price);
-        chart.xAxis[0].setExtremes();
-        chart.hideLoading();
+      .then(() => {
+        // chart.hideLoading();
       });
     },
     selectionToString: function (range) {
@@ -123,12 +194,20 @@ export default {
         return item;
       });
     },
-    formatChartData: function (coin, chartData) {
-      chartData = this.convertToEur(chartData);
-
+    formatChartOptions: function (coin) {
       let vm = this;
 
       return {
+        plotOptions: {
+          series: {
+            lineWidth: 2,
+              states: {
+                hover: {
+                  lineWidth: 2
+                }
+            }
+          }
+        },
         rangeSelector: {
           selected: 1,
           allButtonsEnabled: true,
@@ -199,8 +278,9 @@ export default {
         },
         series: [{
             name: coin,
-            data: chartData,
+            data: null,
             type: 'areaspline',
+            lineColor: '#5e548e',
             threshold: null,
             tooltip: {
                 valueDecimals: 2
@@ -214,8 +294,8 @@ export default {
                     y2: 1
                 },
                 stops: [
-                    [0, '#6542b2'],
-                    [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    [0, '#231942'],
+                    [1, 'transparent']
                 ]
             }
         }],
@@ -249,7 +329,6 @@ export default {
             color: 'rgba(255,255,255,0.5)',
             label: {
               borderRadius: 0,
-
             }
           },
           visible: false,
@@ -268,7 +347,8 @@ export default {
   },
 
   components: {
-    Navbar
+    Navbar,
+    Loader
   }
 }
 </script>
@@ -276,6 +356,19 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../assets/variables';
+
+.red {
+  color: $red;
+}
+
+.green {
+  color: $green;
+}
+
+.chart-title {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
 
 .currency-name {
   font-weight: 300;
@@ -288,6 +381,10 @@ export default {
   }
 }
 
+.currency-chart {
+  padding-bottom: 5rem;
+}
+
 .currency-main {
   .currency-price {
     font-weight: 700;
@@ -298,14 +395,6 @@ export default {
   .currency-change {
     font-weight: 300;
     font-size: 2rem;
-
-    &.red {
-      color: $red;
-    }
-
-    &.green {
-      color: $green;
-    }
   }
 }
 

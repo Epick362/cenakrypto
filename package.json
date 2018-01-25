@@ -17,9 +17,11 @@
     "express": "^4.16.2",
     "highcharts": "^6.0.4",
     "lodash": "^4.17.4",
+    "number-abbreviate": "^2.0.0",
     "vue": "^2.5.2",
     "vue-highcharts": "0.0.10",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-spinner": "^1.0.3"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

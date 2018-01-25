@@ -14,7 +14,10 @@ export default {
 @import '~bulma/bulma';
 @import './assets/variables';
 
+html { height: 100%; }
+
 body {
+  min-height: 100%;
   color: $palette-text;
   background-color: $palette-body;
   -moz-osx-font-smoothing: grayscale;
