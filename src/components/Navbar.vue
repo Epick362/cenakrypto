@@ -4,7 +4,7 @@
       <div class="navbar-brand">
         <router-link class="navbar-item" to="/">
           <span class="icon">
-            <i class="fas fa-gem" />
+            <img src="../assets/logo.png" alt="cenakrypto.sk">
           </span>
         </router-link>
         <span class="navbar-burger burger" data-target="navbarMenu">

@@ -13,6 +13,7 @@ export default {
 <style lang="scss">
 @import '~bulma/bulma';
 @import './assets/variables';
+@import './assets/tooltip';
 
 html { height: 100%; }
 
@@ -24,13 +25,31 @@ body {
   font-family: "Montserrat",sans-serif;
 }
 
+.tooltip-icon {
+  color: #888;
+}
+
 .hero.hero-main {
   background-color: transparent;
-  background: linear-gradient($palette-accent, transparent);
+  background: linear-gradient($palette-hero, transparent);
 
   .title {
+    font-weight: 700;
+  }
+
+  h1.title {
     font-size: 2.5rem;
-    font-weight: 300;
+    margin: 2rem 0;
+  }
+
+  h2.title {
+    font-size: 1.6rem;
+    margin: 3rem 0 2rem 0;
+  }
+
+  h3.title {
+    font-size: 1.4rem;
+    margin: 1.5rem 0;
   }
 
   & a:not(.button),

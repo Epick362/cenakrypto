@@ -6,6 +6,7 @@ import router from './router'
 import axios from 'axios'
 import _ from 'lodash'
 
+import VTooltip from 'v-tooltip'
 import VueHighcharts from 'vue-highcharts';
 import Highcharts from 'highcharts';
 import loadStock from 'highcharts/modules/stock';
@@ -14,6 +15,7 @@ loadStock(Highcharts);
 Vue.config.productionTip = false
 
 Vue.use(VueHighcharts, { Highcharts });
+Vue.use(VTooltip);
 
 
 // TEMP HACK

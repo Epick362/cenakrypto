@@ -7,13 +7,23 @@
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="currency-name">
+            <img 
+              class="currency-icon"
+              v-if="coinData.id"
+              :src="coinData.id ? '/static/currencies/'+coinData.id.toLowerCase()+'.svg' : ''" 
+              :alt="coinData.id"
+            >
             <span class="currency-short">{{ coinData.id }}</span>
             {{ coinData.display_name }}
           </h1>
 
           <div class="currency-main">
+            <span class="tooltip-icon" v-tooltip="{ content: 'Aktuálna cena za 1 '+ coinData.id }">
+              <i class="fas fa-question-circle"></i>
+            </span>
             <span class="currency-price">
-              € {{ (coinData.price / this.$eurToUsd).toFixed(2) }}
+              <span class="euro-sign">€</span>
+              {{ (coinData.price / this.$eurToUsd).toFixed(2) }}
             </span>
             <span class="currency-change" v-bind:class="[coinData.cap24hrChange >= 0 ? 'green' : 'red']">
                 {{ coinData.cap24hrChange }}%
@@ -30,20 +40,37 @@
               <div class="currency-detail-type">{{ chartRange.text }} zmena</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ {{ priceStats.low }}</div>
+              <div class="currency-detail-price">
+                <span class="euro-sign">€</span>
+                {{ priceStats.low }}
+              </div>
               <div class="currency-detail-type">{{ chartRange.text }} min.</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ {{ priceStats.high }}</div>
+              <div class="currency-detail-price">
+                <span class="euro-sign">€</span>
+                {{ priceStats.high }}
+              </div>
               <div class="currency-detail-type">{{ chartRange.text }} max.</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ {{ marketStats.volume }}</div>
+              <div class="currency-detail-price">
+                <span class="euro-sign">€</span>
+                {{ marketStats.volume }}
+              </div>
               <div class="currency-detail-type">24h objem</div>
             </div>
             <div class="column">
-              <div class="currency-detail-price">€ {{ marketStats.cap }}</div>
-              <div class="currency-detail-type">Kapitalizácia</div>
+              <div class="currency-detail-price">
+                <span class="euro-sign">€</span>
+                {{ marketStats.cap }}
+              </div>
+              <div class="currency-detail-type">
+                Kapitalizácia
+                <span class="tooltip-icon" v-tooltip="{ content: 'Objem mincí v obehu násobený ich aktuálnou trhovou hodnotu.' }">
+                  <i class="fas fa-question-circle"></i>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -107,7 +134,7 @@ export default {
 
       let low = _.minBy(this.priceData, (price) => price[1])[1];
       let high = _.maxBy(this.priceData, (price) => price[1])[1];
-      let change = high - low;
+      let change = this.priceData[this.priceData.length - 1][1] - this.priceData[0][1];
 
       return {
         change: (change).toFixed(2),
@@ -280,7 +307,7 @@ export default {
             name: coin,
             data: null,
             type: 'areaspline',
-            lineColor: '#5e548e',
+            lineColor: '#5e4dbc',
             threshold: null,
             tooltip: {
                 valueDecimals: 2
@@ -294,7 +321,7 @@ export default {
                     y2: 1
                 },
                 stops: [
-                    [0, '#231942'],
+                    [0, '#3b3177'],
                     [1, 'transparent']
                 ]
             }
@@ -370,9 +397,20 @@ export default {
   margin: 1rem 0;
 }
 
+.euro-sign {
+  color: darken($palette-text, 20%);
+}
+
 .currency-name {
   font-weight: 300;
   font-size: 2.5rem;
+
+  .currency-icon {
+    vertical-align: middle;
+    width: 56px;
+    margin-top: -6px;
+    // margin-right: 5px;
+  }
 
   .currency-short {
     display: 'inline-block';
@@ -386,10 +424,12 @@ export default {
 }
 
 .currency-main {
+  margin: 1rem 0;
+
   .currency-price {
     font-weight: 700;
     font-size: 3.5rem;
-    letter-spacing: -4px;
+    letter-spacing: -2px;
   }
 
   .currency-change {
@@ -399,7 +439,7 @@ export default {
 }
 
 .currency-details {
-  margin: 2.5rem 0;
+  margin: 2rem 0;
 }
 
 .currency-detail {
