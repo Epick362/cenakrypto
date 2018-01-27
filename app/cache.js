@@ -17,7 +17,7 @@ exports.request = function (key, apiCall, expire = 60) {
     })
 
     if (cacheResult) {
-        return Promise.resolve(cacheResult);
+        return Promise.resolve({data: cacheResult});
     }
 
     return apiCall.then((response) => {

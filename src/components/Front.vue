@@ -32,9 +32,9 @@
               <div class="currency-name-long">
                 {{ currency.long }}
               </div>
-              <div class="current-price">€ {{ convertToEur(currency.price) }}</div>
+              <div class="current-price">€ {{ (currency.price) }}</div>
               <div class="currency-change" v-bind:class="[currency.perc >= 0 ? 'green' : 'red']">
-                {{ currency.perc }}%
+                {{ (currency.perc).toFixed(2) }}%
                 <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
                 <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
               </div>
@@ -59,9 +59,9 @@
                 >
                 {{ currency.short }}
                 </div>
-              <div class="current-price">€ {{ convertToEur(currency.price) }}</div>
+              <div class="current-price">€ {{ currency.price }}</div>
               <div class="currency-change" v-bind:class="[currency.perc >= 0 ? 'green' : 'red']">
-                {{ currency.perc }}%
+                {{ (currency.perc).toFixed(2) }}%
                 <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
                 <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
               </div>
@@ -93,32 +93,23 @@ import Vue from 'vue'
 import axios from 'axios'
 import _ from 'lodash'
 import Navbar from '@/components/Navbar'
+import { API_ROOT } from '@/constants'
 
 export default {
   name: 'Front',
   data() {
     return {
       topCurrencies: [],
-      smallCurrencies: [],
-      errors: []
+      smallCurrencies: []
     };
   },
 
   created() {
-      axios.get(`http://coincap.io/front`)
+      axios.get(`${API_ROOT}/front`)
       .then(response => {
-        this.topCurrencies = response.data.slice(0, 3);
-        this.smallCurrencies = response.data.slice(3, 10);
+        this.topCurrencies = response.data.data.slice(0, 3);
+        this.smallCurrencies = response.data.data.slice(3, 10);
       })
-      .catch(e => {
-        this.errors.push(e)
-      })
-  },
-
-  methods: {
-    convertToEur: function(price) {
-      return (price / this.$eurToUsd).toFixed(2);
-    }
   },
 
   components: {

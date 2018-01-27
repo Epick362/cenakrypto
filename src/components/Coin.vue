@@ -23,16 +23,15 @@
             </span>
             <span class="currency-price">
               <span class="euro-sign">€</span>
-              {{ (coinData.price / this.$eurToUsd).toFixed(2) }}
+              {{ coinData.price }}
             </span>
             <span class="currency-change" v-bind:class="[coinData.cap24hrChange >= 0 ? 'green' : 'red']">
-                {{ coinData.cap24hrChange }}%
-                <i v-if="coinData.cap24hrChange >= 0" class="fas fa-chevron-up" />
-                <i v-if="coinData.cap24hrChange < 0" class="fas fa-chevron-down" />
-              </span>
+              
+              <span v-if="coinData.cap24hrChange >= 0">+</span>{{ coinData.cap24hrChange }}%
+            </span>
           </div>
 
-          <div v-if="loading == false" class="columns currency-details">
+          <div class="columns currency-details">
             <div class="column">
               <div class="currency-detail-price" v-bind:class="[priceStats.change >= 0 ? 'green' : 'red']">
                 € {{ priceStats.change }}
@@ -73,10 +72,6 @@
               </div>
             </div>
           </div>
-
-          <div v-if="loading == true">
-            <loader :loading="loading"></loader>
-          </div>
         </div>
       </div>
     </section>
@@ -86,9 +81,7 @@
         Vývoj ceny
         <span class="is-pulled-right">
           <span v-bind:class="[priceStats.change_percent >= 0 ? 'green' : 'red']">
-            {{ priceStats.change_percent }}%
-            <i v-if="priceStats.change_percent >= 0" class="fas fa-chevron-up" />
-            <i v-if="priceStats.change_percent < 0" class="fas fa-chevron-down" />
+            <span v-if="priceStats.change_percent >= 0">+</span>{{ priceStats.change_percent }}%
           </span>
         </span>
         
@@ -105,6 +98,7 @@ import Highcharts from 'highcharts'
 import Navbar from '@/components/Navbar'
 import Loader from '@/components/Loader'
 import numAbbr from 'number-abbreviate'
+import { API_ROOT } from '@/constants'
 
 const shortNumberAbbr = new numAbbr([' tisíc', ' m.', ' mld.', ' bilion'])
 
@@ -135,12 +129,13 @@ export default {
       let low = _.minBy(this.priceData, (price) => price[1])[1];
       let high = _.maxBy(this.priceData, (price) => price[1])[1];
       let change = this.priceData[this.priceData.length - 1][1] - this.priceData[0][1];
+      let change_percent = change * 100 / low;
 
       return {
-        change: (change).toFixed(2),
-        change_percent: (change * 100 / low).toFixed(2),
-        low: (low).toFixed(2),
-        high: (high).toFixed(2)
+        change: +(change).toFixed(2),
+        change_percent: +(change_percent).toFixed(2),
+        low: +(low).toFixed(2),
+        high: +(high).toFixed(2)
       };
     }
   },
@@ -161,13 +156,13 @@ export default {
     loadCoin: function (coin) {
       this.loading = true;
 
-      return axios.get(`http://coincap.io/page/${coin}`)
+      return axios.get(`${API_ROOT}/coin/${coin}`)
       .then((response) => {
         this.loading = false;
 
         this.marketStats = {
-          volume: shortNumberAbbr.abbreviate(response.data.volume/this.$eurToUsd, 1),
-          cap: shortNumberAbbr.abbreviate(response.data.market_cap/this.$eurToUsd, 1)
+          volume: shortNumberAbbr.abbreviate(response.data.volume, 1),
+          cap: shortNumberAbbr.abbreviate(response.data.market_cap, 1)
         };
 
         return response;
@@ -177,12 +172,11 @@ export default {
       const { chart } = this.$refs.chartRef;
       this.loading = true;
 
-      return axios.get(`http://coincap.io/history/${scale}/${coin}`)
+      return axios.get(`${API_ROOT}/coin/${coin}/history/${scale}`)
       .then((response) => {
         this.loading = false;
-        let priceData = this.convertToEur(response.data.price);
-        this.priceData = priceData;
-        chart.series[0].setData(priceData);
+        this.priceData = response.data.price;
+        chart.series[0].setData(this.priceData);
         chart.xAxis[0].setExtremes();
 
         return response;
@@ -213,13 +207,6 @@ export default {
         default:
           return '365day';
       }
-    },
-    convertToEur: function(priceData) {
-      return _.map(priceData, (item) => {
-        item[1] = parseFloat((item[1] / this.$eurToUsd).toFixed(2));
-
-        return item;
-      });
     },
     formatChartOptions: function (coin) {
       let vm = this;

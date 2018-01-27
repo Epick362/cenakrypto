@@ -14,14 +14,12 @@ class Front {
             let coins = promises[1].data.splice(0, 10);
 
             coins = _.map(coins, (coin) => {
-                coin.price = coin.price / promises[0];
+                coin.price = +(coin.price / promises[0]).toFixed(2);
 
                 return coin;
             })
-            
-            // console.log(coins);
 
-            return {data: coins};
+            return coins;
         })
     }
 }
