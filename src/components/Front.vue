@@ -177,7 +177,7 @@ export default {
 
   &:hover {
     box-shadow: 0 3px 12px fade-out(#202020, 0.8);
-    background: #27204f;
+    background: $palette-accent;
   }
 
   &:not(:last-child):after {
@@ -230,7 +230,7 @@ export default {
 
   &:hover {
     box-shadow: 0 3px 12px fade-out(#202020, 0.7);
-    background: #27204f;
+    background: $palette-accent;
   }
 
   .currency-name {

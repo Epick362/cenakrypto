@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "body-parser": "^1.18.2",
     "bulma": "^0.6.2",
     "express": "^4.16.2",
     "highcharts": "^6.0.4",
     "lodash": "^4.17.4",
     "number-abbreviate": "^2.0.0",
+    "redis": "^2.8.0",
     "v-tooltip": "^2.0.0-rc.30",
     "vue": "^2.5.2",
     "vue-highcharts": "0.0.10",
