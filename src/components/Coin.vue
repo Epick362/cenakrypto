@@ -76,7 +76,7 @@
       </div>
     </section>
 
-    <section class="container currency-chart">
+    <section class="section container currency-chart">
       <h2 class="chart-title">
         Vývoj ceny
         <span class="is-pulled-right">
@@ -88,6 +88,8 @@
       </h2>
       <highstock :options="chartOptions" ref="chartRef"></highstock>
     </section>
+
+    <page-footer></page-footer>
   </div>
 </template>
 
@@ -96,6 +98,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import Highcharts from 'highcharts'
 import Navbar from '@/components/Navbar'
+import PageFooter from '@/components/PageFooter'
 import Loader from '@/components/Loader'
 import numAbbr from 'number-abbreviate'
 import { API_ROOT } from '@/constants'
@@ -362,7 +365,8 @@ export default {
 
   components: {
     Navbar,
-    Loader
+    Loader,
+    PageFooter
   }
 }
 </script>

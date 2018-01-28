@@ -71,7 +71,7 @@
       </div>
     </section>
 
-    <section id="faq" class="container crypto-faq">
+    <section id="faq" class="section container crypto-faq">
       <h2 class="title">Čo je kryptomena?</h2>
       <p>
         Kryptomeny sú digitálna forma peňazí. Sú kryptograficky chránené proti manipulácii.

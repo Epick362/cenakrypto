@@ -1,5 +1,5 @@
 <template>
-  <footer class="page-footer">
+  <footer class="section page-footer">
       <div class="footer-inner container">
         <div class="columns">
             <div class="column is-3">
