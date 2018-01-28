@@ -1,1 +1,1 @@
-export const API_ROOT = 'http://cenakrypto.sk/api';
+export const API_ROOT = 'https://cenakrypto.sk/api';
