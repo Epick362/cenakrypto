@@ -13,7 +13,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3100;
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -27,7 +27,7 @@ router.get('/coin/:coin/history/:range', coinController.history);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api', router);
+app.use('/', router);
 
 // START THE SERVER
 // =============================================================================
