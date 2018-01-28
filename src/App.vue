@@ -65,6 +65,10 @@ body {
     background-color: transparent;
     color: $palette-text;
   }
+  
+  .v--modal {
+    color: #202020;
+  }
 }
 
 </style>

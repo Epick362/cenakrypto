@@ -7,30 +7,18 @@ import axios from 'axios'
 import _ from 'lodash'
 
 import VTooltip from 'v-tooltip'
-import VueHighcharts from 'vue-highcharts';
-import Highcharts from 'highcharts';
-import loadStock from 'highcharts/modules/stock';
-loadStock(Highcharts);
+import VueHighcharts from 'vue-highcharts'
+import Highcharts from 'highcharts'
+import loadStock from 'highcharts/modules/stock'
+import VModal from 'vue-js-modal'
+
+loadStock(Highcharts)
 
 Vue.config.productionTip = false
 
-Vue.use(VueHighcharts, { Highcharts });
-Vue.use(VTooltip);
-
-
-// TEMP HACK
-axios.get(`https://api.fixer.io/latest?base=EUR`)
-.then(response => {
-  let eurToUsd = _.get(response.data, "rates.USD");
-
-  if (eurToUsd) {
-    Vue.prototype.$eurToUsd = eurToUsd;
-  }
-})
-.catch(err => {
-  console.error('Unable to load EUR to USD rates, defaulting to 1.2');
-  Vue.prototype.$eurToUsd = 1.2;
-})
+Vue.use(VueHighcharts, { Highcharts })
+Vue.use(VTooltip)
+Vue.use(VModal, { dialog: true })
 
 /* eslint-disable no-new */
 new Vue({
