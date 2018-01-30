@@ -17,7 +17,7 @@
           <div class="columns top-currencies">
             <router-link
               class="column currency-box"
-              v-for="currency of topCurrencies"
+              v-for="(currency, index) of topCurrencies"
               :key="currency.short"
               :to="{name: 'Coin', params: {coin: currency.short}}"
             >
@@ -30,7 +30,7 @@
                 {{ currency.short }}
               </div>
               <div class="currency-name-long">
-                {{ currency.long }}
+                {{ index + 1 }}. {{ currency.long }}
               </div>
               <div class="current-price">€ {{ (currency.price) }}</div>
               <div class="currency-change" v-bind:class="[currency.perc >= 0 ? 'green' : 'red']">
@@ -47,11 +47,12 @@
           <div class="columns small-currencies">
             <router-link
               class="column currency-box-small"
-              v-for="currency of smallCurrencies"
+              v-for="(currency, index) of smallCurrencies"
               :key="currency.short"
               :to="{name: 'Coin', params: {coin: currency.short}}"
             >
               <div class="currency-name">
+                {{ index + 4 }}.
                 <img 
                   class="currency-icon"
                   :src="'/static/currencies/'+currency.short.toLowerCase()+'.svg'" 
@@ -144,6 +145,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "~bulma/sass/utilities/mixins";
 @import '../assets/variables';
 
 .top-currencies {
@@ -189,6 +191,12 @@ export default {
   padding: 1rem 0.5rem;
   border-radius: 16px;
   transition: all 300ms ease-in-out;
+
+  @include mobile() {
+    &:not(:last-child):after {
+      display: none;
+    }
+  }
 
   &:hover {
     box-shadow: 0 3px 12px fade-out(#202020, 0.8);
