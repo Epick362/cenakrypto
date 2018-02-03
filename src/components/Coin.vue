@@ -7,12 +7,11 @@
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="currency-name">
-            <img 
-              class="currency-icon"
+            <coin-icon
               v-if="coinData.id"
-              :src="coinData.id ? '/static/currencies/'+coinData.id.toLowerCase()+'.svg' : ''" 
-              :alt="coinData.id"
-            >
+              className="currency-icon"
+              :symbol="coinData.id">
+            </coin-icon>
             <span class="currency-short">{{ coinData.id }}</span>
             {{ coinData.display_name }}
           </h1>
@@ -100,6 +99,7 @@ import Highcharts from 'highcharts'
 import Navbar from '@/components/Navbar'
 import PageFooter from '@/components/PageFooter'
 import Loader from '@/components/Loader'
+import CoinIcon from '@/components/CoinIcon'
 import numAbbr from 'number-abbreviate'
 import { API_ROOT } from '@/constants'
 
@@ -366,7 +366,8 @@ export default {
   components: {
     Navbar,
     Loader,
-    PageFooter
+    PageFooter,
+    CoinIcon
   }
 }
 </script>

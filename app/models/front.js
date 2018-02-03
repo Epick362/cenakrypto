@@ -45,7 +45,7 @@ class Front {
                     result.push({
                         symbol: match.Symbol,
                         name: match.CoinName,
-                        algorithm: match.algorithm,
+                        algorithm: match.Algorithm,
                         supply: match.TotalCoinSupply,
                         image: match.ImageUrl
                     });

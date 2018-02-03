@@ -29,66 +29,6 @@ body {
   color: #888;
 }
 
-
-.search-input {
-  padding: 6px 16px;
-  border-radius: 16px;
-  border: none;
-  background: rgba(255,255,255,0.2);
-  color: #FFF;
-  font-size: 1rem;
-  width: 150px;
-  transition: all 200ms ease-in;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-
-  &:focus {
-    background: rgba(255,255,255,0.25);
-  }
-
-  &:hover {
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
-  }
-}
-
-.autocomplete__suggestions {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 100%;
-  width: auto;
-  min-width: 100%;
-  font-variant: initial !important;
-  margin-top: 5px;
-  overflow: hidden;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-  background: transparent;
-
-  .autocomplete__entry {
-    color: $palette-text;
-    background: lighten($palette-hero, 5%);
-    font-variant: initial !important;
-    font-size: 1em !important;
-    transition: all 200ms ease-in-out;
-    padding: 10px;
-    cursor: pointer;
-
-    &:first-child {
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-
-    &:last-child {
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-    }
-
-    &:hover {
-      background: $palette-accent;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-      z-index: 5;
-    }
-  }
-}
-
 .hero.hero-main {
   background-color: transparent;
   background: linear-gradient($palette-hero, transparent);

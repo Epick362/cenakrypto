@@ -22,12 +22,23 @@
         </div>
         <div class="navbar-end">
           <span class="navbar-item">
-            <autocomplete-vue
+            <autocomplete
               v-if="coins.length > 0"
               input-class="search-input"
               :list="coins"
-              placeholder="Vyhľadávanie.."
-            ></autocomplete-vue>
+              property="symbol"
+              placeholder="Vyhľadávanie..."
+            >
+              <div
+                slot="item"
+                slot-scope="props">
+                <coin-icon
+                  className="currency-icon"
+                  :symbol="props.symbol">
+                </coin-icon>
+                {{ props.fullName }} (<b>{{ props.symbol }}</b>)
+              </div>
+            </autocomplete>
           </span>
           <span class="navbar-item">
             <button class="button cta-button" @click="show">
@@ -47,7 +58,9 @@
 <script>
 import axios from 'axios'
 import { API_ROOT } from '@/constants'
-import { autocompleteBus } from 'autocomplete-vue';
+import Autocomplete from '@/components/Autocomplete'
+import CoinIcon from '@/components/CoinIcon'
+import { autocompleteBus } from '@/components/autocompleteBus'
 
 export default {
   name: 'navbar',
@@ -88,6 +101,10 @@ export default {
         ]
       })
     }
+  },
+  components: {
+    Autocomplete,
+    CoinIcon
   }
 }
 </script>
@@ -102,6 +119,13 @@ export default {
 #nav-toggle-state:checked ~ .navbar-menu {
   background: linear-gradient(transparent, lighten($palette-hero, 10%));
   display: block;
+}
+
+.currency-icon {
+  vertical-align: middle;
+  width: 30px;
+  height: auto;
+  margin-top: -5px;
 }
 
 .cta-button {

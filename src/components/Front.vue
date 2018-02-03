@@ -22,11 +22,10 @@
               :to="{name: 'coin', params: {coin: currency.short}}"
             >
               <div class="currency-name">
-                <img 
-                  class="currency-icon"
-                  :src="'/static/currencies/'+currency.short.toLowerCase()+'.svg'" 
-                  :alt="currency.short"
-                >
+                <coin-icon
+                  className="currency-icon"
+                  :symbol="currency.short">
+                </coin-icon>
                 {{ currency.short }}
               </div>
               <div class="currency-name-long">
@@ -52,11 +51,10 @@
               :to="{name: 'coin', params: {coin: currency.short}}"
             >
               <div class="currency-name">
-                <img 
-                  class="currency-icon"
-                  :src="'/static/currencies/'+currency.short.toLowerCase()+'.svg'" 
-                  :alt="currency.short"
-                >
+                <coin-icon
+                  className="currency-icon"
+                  :symbol="currency.short">
+                </coin-icon>
                 {{ currency.short }}
                 </div>
               <div class="current-price">€ {{ currency.price }}</div>
@@ -115,6 +113,7 @@ import _ from 'lodash'
 import Navbar from '@/components/Navbar'
 import PageFooter from '@/components/PageFooter'
 import Cta from '@/components/Cta'
+import CoinIcon from '@/components/CoinIcon'
 import { API_ROOT } from '@/constants'
 
 export default {
@@ -137,7 +136,8 @@ export default {
   components: {
     Navbar,
     PageFooter,
-    Cta
+    Cta,
+    CoinIcon
   }
 }
 </script>
