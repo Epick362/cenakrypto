@@ -7,17 +7,28 @@
             <img src="../assets/logo.png" alt="cenakrypto.sk">
           </span>
         </router-link>
-        <span class="navbar-burger burger" data-target="navbarMenu">
+        <label class="navbar-burger burger" for="nav-toggle-state">
           <span />
           <span />
           <span />
-        </span>
+        </label>
       </div>
-      <div id="navbarMenu" class="navbar-menu">
+
+      <input type="checkbox" id="nav-toggle-state" />
+
+      <div class="navbar-menu">
         <div class="navbar-start">
-          <a href="#faq" class="navbar-item">Čo sú to kryptomeny?</a>
+          <a href="/#faq" class="navbar-item">Čo sú to kryptomeny?</a>
         </div>
         <div class="navbar-end">
+          <span class="navbar-item">
+            <autocomplete-vue
+              v-if="coins.length > 0"
+              input-class="search-input"
+              :list="coins"
+              placeholder="Vyhľadávanie.."
+            ></autocomplete-vue>
+          </span>
           <span class="navbar-item">
             <button class="button cta-button" @click="show">
               <span class="icon">
@@ -34,9 +45,31 @@
 </template>
 
 <script>
+import axios from 'axios'
+import { API_ROOT } from '@/constants'
+import { autocompleteBus } from 'autocomplete-vue';
+
 export default {
   name: 'navbar',
+  data() {
+    return {
+      coins: []
+    };
+  },
+  created() {
+    this.loadCoins();
+
+    autocompleteBus.$on('autocomplete-select', (selectedValue) => {
+      this.$router.replace({name: 'coin', params: {coin: selectedValue}});
+    });
+  },
   methods: {
+    loadCoins() {
+      return axios.get(`${API_ROOT}/coins`)
+      .then((response) => {
+        this.coins = response.data.data;
+      })
+    },
     show() {
       this.$modal.show('dialog', {
         title: 'Upozornenie!',
@@ -61,6 +94,15 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/variables';
+
+#nav-toggle-state {
+  display: none;
+}
+
+#nav-toggle-state:checked ~ .navbar-menu {
+  background: linear-gradient(transparent, lighten($palette-hero, 10%));
+  display: block;
+}
 
 .cta-button {
   border-radius: 20px;

@@ -19,7 +19,7 @@
               class="column currency-box"
               v-for="(currency, index) of topCurrencies"
               :key="currency.short"
-              :to="{name: 'Coin', params: {coin: currency.short}}"
+              :to="{name: 'coin', params: {coin: currency.short}}"
             >
               <div class="currency-name">
                 <img 
@@ -49,7 +49,7 @@
               class="column currency-box-small"
               v-for="(currency, index) of smallCurrencies"
               :key="currency.short"
-              :to="{name: 'Coin', params: {coin: currency.short}}"
+              :to="{name: 'coin', params: {coin: currency.short}}"
             >
               <div class="currency-name">
                 {{ index + 4 }}.
@@ -247,7 +247,7 @@ export default {
 
 .currency-box-small {
   margin: 1rem 0.2rem;
-  padding: 1.5rem 0.2rem;
+  padding: 1.2rem 0.2rem 0.7rem 0.2rem;
   border-radius: 16px;
   transition: background-color 300ms ease-in-out;
 

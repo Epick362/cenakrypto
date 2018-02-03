@@ -1,1 +1,1 @@
-export const API_ROOT = 'https://cenakrypto.sk/api';
+export const API_ROOT = 'http://localhost:3100/api';

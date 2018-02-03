@@ -6,3 +6,10 @@ exports.index = function(req, res) {
         res.json({ data: coins });
     })
 }
+
+exports.coins = function(req, res) {
+    Front.coins()
+    .then((coins) => {
+        res.json({ data: coins });
+    })
+}

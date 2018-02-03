@@ -10,12 +10,12 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "Front",
+      name: "front",
       component: Front
     },
     {
       path: "/coin/:coin",
-      name: "Coin",
+      name: "coin",
       component: Coin
     }
   ]

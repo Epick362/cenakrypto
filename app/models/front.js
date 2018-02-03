@@ -22,6 +22,17 @@ class Front {
             return coins;
         })
     }
+
+    static coins() {
+        let coinList = axios.get(`http://coincap.io/coins`);
+
+        return cache.request('global', coinList, 3600)
+        .then((response) => {
+            return _.map(response.data, (coin) => {
+                return {name: coin};
+            });
+        })
+    }
 }
 
 module.exports = Front

@@ -11,11 +11,13 @@ import VueHighcharts from 'vue-highcharts'
 import Highcharts from 'highcharts'
 import loadStock from 'highcharts/modules/stock'
 import VModal from 'vue-js-modal'
+import AutocompleteVue from 'autocomplete-vue'
 
 loadStock(Highcharts)
 
 Vue.config.productionTip = false
 
+Vue.component('autocomplete-vue', AutocompleteVue);
 Vue.use(VueHighcharts, { Highcharts })
 Vue.use(VTooltip)
 Vue.use(VModal, { dialog: true })
