@@ -47,12 +47,11 @@
           <div class="columns small-currencies">
             <router-link
               class="column currency-box-small"
-              v-for="(currency, index) of smallCurrencies"
+              v-for="currency of smallCurrencies"
               :key="currency.short"
               :to="{name: 'coin', params: {coin: currency.short}}"
             >
               <div class="currency-name">
-                {{ index + 4 }}.
                 <img 
                   class="currency-icon"
                   :src="'/static/currencies/'+currency.short.toLowerCase()+'.svg'" 

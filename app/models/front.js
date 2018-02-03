@@ -24,13 +24,35 @@ class Front {
     }
 
     static coins() {
-        let coinList = axios.get(`http://coincap.io/coins`);
+        // Cryptocompare has richer data
+        let coinsData = axios.get(`https://www.cryptocompare.com/api/data/coinlist`);
 
-        return cache.request('global', coinList, 3600)
-        .then((response) => {
-            return _.map(response.data, (coin) => {
-                return {name: coin};
-            });
+        // but we have to filter list by this one which we have historical data from
+        let coinsListSupported = axios.get(`http://coincap.io/coins`);
+
+        return Promise.all([
+            cache.request('global-coinsdata', coinsData, 60 * 60 * 24), // 1 day cache
+            cache.request('global-coinslist', coinsListSupported, 60 * 60 * 24) 
+        ])
+        .then((promises) => {
+            let coinsData = promises[0].data.Data;
+            let coinsList = promises[1].data;
+
+            return _.reduce(coinsList, function(result, coin) {
+                let match = coinsData[coin];
+
+                if (match) {
+                    result.push({
+                        symbol: match.Symbol,
+                        name: match.CoinName,
+                        algorithm: match.algorithm,
+                        supply: match.TotalCoinSupply,
+                        image: match.ImageUrl
+                    });
+                }
+
+                return result;
+            }, []);
         })
     }
 }
