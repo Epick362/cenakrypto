@@ -12,8 +12,16 @@
           </h1>
 
           <h2 class="title">
-            Rebríček kryptomien s najväčšou kapitalizáciou
+            Zoznam kryptomien s najväčšou kapitalizáciou
           </h2>
+
+          <p class="help-block">
+            <span class="tooltip-icon">
+              <i class="fas fa-question-circle"></i>
+            </span>
+
+            Kapitalizácia je počet jednotiek meny v obehu násobený ich aktuálnou trhovou hodnotu.
+          </p>
 
           <b-table
             :data="currencies"
@@ -24,7 +32,6 @@
             :total="total"
             :per-page="perPage"
             @page-change="onPageChange"
-            @click="clickRow"
 
             backend-sorting
             :default-sort-direction="defaultSortOrder"
@@ -41,33 +48,34 @@
               </b-table-column>
 
               <b-table-column field="long" label="Názov">
-                <coin-icon
-                  className="currency-icon"
-                  :symbol="props.row.short">
-                </coin-icon>
-                {{ props.row.long }}
+                <router-link :to="{name: 'coin', params: {coin: props.row.short}}">
+                  <coin-icon
+                    className="currency-icon"
+                    :symbol="props.row.short">
+                  </coin-icon>
+                  {{ props.row.long }}
+
+                </router-link>
               </b-table-column>
 
               <b-table-column field="mktcap" label="Kapitalizácia" numeric sortable>
-                € {{ format(props.row.mktcap, 0) }}
+                {{ props.row.mktcap | formatNumbers(0) }} €
               </b-table-column>
 
               <b-table-column field="price" label="Cena" numeric sortable>
-                € <b>{{ format(props.row.price, 2) }}</b>
+                <b>{{ props.row.price | formatNumbers(2) }}</b> €
               </b-table-column>
 
               <b-table-column field="perc" label="Zmena 24h" numeric sortable>
-                <span :class="type(props.row.perc)">
-                  {{ props.row.perc }}%
-                </span>
+                <pretty-change-perc :percent="props.row.perc" :bold="true"></pretty-change-perc>
               </b-table-column>
 
-              <b-table-column field="supply" label="Mince v obehu" numeric sortable>
-                {{ format(props.row.supply, 0) }}
+              <b-table-column field="supply" label="Jednotky v obehu" numeric sortable>
+                {{ props.row.supply | formatNumbers(0) }}
               </b-table-column>
 
               <b-table-column field="volume" label="Objem 24h" numeric sortable>
-                {{ format(props.row.volume, 0) }}
+                {{ props.row.volume | formatNumbers(0) }}
               </b-table-column>
             </template>
           </b-table>
@@ -85,6 +93,7 @@ import _ from 'lodash'
 import Navbar from '@/components/Navbar'
 import PageFooter from '@/components/PageFooter'
 import CoinIcon from '@/components/CoinIcon'
+import PrettyChangePerc from '@/components/PrettyChangePerc'
 import { API_ROOT } from '@/constants'
 
 export default {
@@ -129,33 +138,10 @@ export default {
       this.loadData()
     },
 
-    clickRow(row) {
-      this.$router.push({name: 'coin', params: {coin: row.short}})
-    },
-
-    type(value) {
-      const number = parseFloat(value)
-      if (number > 0) {
-          return 'green'
-      } else {
-          return 'red'
-      }
-    },
-
     onSort(field, order) {
       this.sortField = field
       this.sortOrder = order
       this.loadData()
-    },
-
-    format(n, c, d, t) {
-      var c = isNaN(c = Math.abs(c)) ? 2 : c, 
-        d = d == undefined ? "," : d, 
-        t = t == undefined ? " " : t, 
-        s = n < 0 ? "-" : "", 
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
-        j = (j = i.length) > 3 ? j % 3 : 0;
-      return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     }
   },
 
@@ -166,7 +152,8 @@ export default {
   components: {
     Navbar,
     PageFooter,
-    CoinIcon
+    CoinIcon,
+    PrettyChangePerc
   }
 }
 </script>
@@ -179,19 +166,16 @@ export default {
   font-size: 2rem;
 }
 
+.help-block {
+  color: fade-out($palette-text, 0.2);
+  margin: 2rem 0;
+}
+
 .brand-icon {
   width: 40px;
   height: auto;
   vertical-align: middle;
   margin: 0 0.5rem;
-}
-
-.red {
-  color: $red;
-}
-
-.green {
-  color: $green;
 }
 
 .currency-icon {
@@ -204,6 +188,7 @@ export default {
 .currency-symbol {
   font-weight: 700;
   text-align: center;
+  letter-spacing: 1px;
 }
 
 </style>

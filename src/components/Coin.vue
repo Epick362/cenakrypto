@@ -21,12 +21,12 @@
               <i class="fas fa-question-circle"></i>
             </span>
             <span class="currency-price">
-              <span class="euro-sign">€</span>
               {{ coinData.price }}
+              <span class="euro-sign">€</span>
             </span>
             <span class="currency-change" v-bind:class="[coinData.cap24hrChange >= 0 ? 'green' : 'red']">
               
-              <span v-if="coinData.cap24hrChange >= 0">+</span>{{ coinData.cap24hrChange }}%
+              <pretty-change-perc :percent="coinData.cap24hrChange"></pretty-change-perc>
             </span>
           </div>
 
@@ -35,33 +35,33 @@
               <div class="currency-detail-price" v-bind:class="[priceStats.change >= 0 ? 'green' : 'red']">
                 € {{ priceStats.change }}
               </div>
-              <div class="currency-detail-type">{{ chartRange.text }} zmena</div>
+              <div class="currency-detail-type">Zmena / {{ chartRange.text }}</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
-                <span class="euro-sign">€</span>
                 {{ priceStats.low }}
+                <span class="euro-sign">€</span>
               </div>
-              <div class="currency-detail-type">{{ chartRange.text }} min.</div>
+              <div class="currency-detail-type">Min. / {{ chartRange.text }}</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
-                <span class="euro-sign">€</span>
                 {{ priceStats.high }}
+                <span class="euro-sign">€</span>
               </div>
-              <div class="currency-detail-type">{{ chartRange.text }} max.</div>
+              <div class="currency-detail-type">Max. / {{ chartRange.text }}</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
-                <span class="euro-sign">€</span>
                 {{ marketStats.volume }}
+                <span class="euro-sign">€</span>
               </div>
               <div class="currency-detail-type">24h objem</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
-                <span class="euro-sign">€</span>
                 {{ marketStats.cap }}
+                <span class="euro-sign">€</span>
               </div>
               <div class="currency-detail-type">
                 Kapitalizácia
@@ -79,9 +79,7 @@
       <h2 class="chart-title">
         Vývoj ceny
         <span class="is-pulled-right">
-          <span v-bind:class="[priceStats.change_percent >= 0 ? 'green' : 'red']">
-            <span v-if="priceStats.change_percent >= 0">+</span>{{ priceStats.change_percent }}%
-          </span>
+          <pretty-change-perc :percent="priceStats.change_percent"></pretty-change-perc>
         </span>
         
       </h2>
@@ -100,6 +98,7 @@ import Navbar from '@/components/Navbar'
 import PageFooter from '@/components/PageFooter'
 import Loader from '@/components/Loader'
 import CoinIcon from '@/components/CoinIcon'
+import PrettyChangePerc from '@/components/PrettyChangePerc'
 import numAbbr from 'number-abbreviate'
 import { API_ROOT } from '@/constants'
 
@@ -367,7 +366,8 @@ export default {
     Navbar,
     Loader,
     PageFooter,
-    CoinIcon
+    CoinIcon,
+    PrettyChangePerc
   }
 }
 </script>
@@ -391,6 +391,7 @@ export default {
 
 .euro-sign {
   color: darken($palette-text, 20%);
+  margin-right: 5px;
 }
 
 .currency-name {

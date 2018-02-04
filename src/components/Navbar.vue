@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <router-link class="navbar-item" to="/">
+        <router-link class="navbar-item brand-navbar-item" to="/">
           <span class="icon">
             <img src="../assets/logo.png" alt="cenakrypto.sk">
           </span>
@@ -20,7 +20,7 @@
         <div class="navbar-start">
           <a href="/#faq" class="navbar-item">Čo sú to kryptomeny?</a>
           <router-link class="navbar-item" :to="{name: 'list'}">
-            Rebríček kryptomien
+            Zoznam kryptomien
           </router-link>
         </div>
         <div class="navbar-end">

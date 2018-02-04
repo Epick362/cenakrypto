@@ -13,6 +13,8 @@ import loadStock from 'highcharts/modules/stock'
 import VModal from 'vue-js-modal'
 import Buefy from 'buefy'
 
+import '@/filters/formatNumbers'
+
 loadStock(Highcharts)
 
 Vue.config.productionTip = false

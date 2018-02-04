@@ -62,7 +62,7 @@ body {
     text-align: center;
   }
 
-  a.navbar-item {
+  a.navbar-item:not(.brand-navbar-item) {
     &:before {
       content: "";
       position: absolute;

@@ -32,10 +32,11 @@
                 {{ index + 1 }}. {{ currency.long }}
               </div>
               <div class="current-price">€ {{ (currency.price) }}</div>
-              <div class="currency-change" v-bind:class="[currency.perc >= 0 ? 'green' : 'red']">
-                {{ (currency.perc).toFixed(2) }}%
-                <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
-                <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+              <div class="currency-change">
+                <pretty-change-perc :percent="currency.perc">
+                  <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
+                  <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+                </pretty-change-perc>
               </div>
             </router-link>
           </div>
@@ -58,10 +59,11 @@
                 {{ currency.short }}
                 </div>
               <div class="current-price">€ {{ currency.price }}</div>
-              <div class="currency-change" v-bind:class="[currency.perc >= 0 ? 'green' : 'red']">
-                {{ (currency.perc).toFixed(2) }}%
-                <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
-                <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+              <div class="currency-change">
+                <pretty-change-perc :percent="currency.perc">
+                  <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
+                  <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+                </pretty-change-perc>
               </div>
             </router-link>
           </div>
@@ -122,6 +124,7 @@ import Navbar from '@/components/Navbar'
 import PageFooter from '@/components/PageFooter'
 import Cta from '@/components/Cta'
 import CoinIcon from '@/components/CoinIcon'
+import PrettyChangePerc from '@/components/PrettyChangePerc'
 import { API_ROOT } from '@/constants'
 
 export default {
@@ -145,7 +148,8 @@ export default {
     Navbar,
     PageFooter,
     Cta,
-    CoinIcon
+    CoinIcon,
+    PrettyChangePerc
   }
 }
 </script>
