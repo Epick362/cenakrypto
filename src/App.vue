@@ -13,6 +13,7 @@ export default {
 <style lang="scss">
 @import './assets/variables';
 @import '~bulma/bulma';
+@import '~buefy/src/scss/buefy';
 @import './assets/tooltip';
 
 html { height: 100%; }
@@ -54,8 +55,7 @@ body {
 
   & a:not(.button),
   & strong {
-    transition: all 200ms ease-in-out;
-    color: fade-out($palette-text, 0.35);
+    color: $palette-text;
   }
 
   .navbar-item {

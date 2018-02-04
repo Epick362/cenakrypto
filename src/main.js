@@ -12,7 +12,6 @@ import Highcharts from 'highcharts'
 import loadStock from 'highcharts/modules/stock'
 import VModal from 'vue-js-modal'
 import Buefy from 'buefy'
-import 'buefy/lib/buefy.css'
 
 loadStock(Highcharts)
 
