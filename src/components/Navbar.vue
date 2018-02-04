@@ -19,6 +19,9 @@
       <div class="navbar-menu">
         <div class="navbar-start">
           <a href="/#faq" class="navbar-item">Čo sú to kryptomeny?</a>
+          <router-link class="navbar-item" :to="{name: 'list'}">
+            Rebríček kryptomien
+          </router-link>
         </div>
         <div class="navbar-end">
           <span class="navbar-item">
@@ -80,7 +83,7 @@ export default {
     loadCoins() {
       return axios.get(`${API_ROOT}/coins`)
       .then((response) => {
-        this.coins = response.data.data;
+        this.coins = response.data;
       })
     },
     show() {

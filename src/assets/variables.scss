@@ -4,6 +4,14 @@
 $palette-text: #fcfcfc;
 $palette-body: #1f273f;
 $palette-accent: #2c2459;
-
-
 $palette-hero: #251738;
+
+$table-color: $palette-text;
+$table-background-color: transparent;
+$table-cell-border: 1px solid rgba(255, 255, 255, 0.2);
+$table-cell-padding: 0.8rem 0.75rem;
+$table-cell-heading-color: $palette-text;
+$table-head-cell-color: $palette-text;
+$table-foot-cell-color: $palette-text;
+
+$table-row-hover-background-color: rgba(255, 255, 255, 0.2);

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Front from '@/components/Front'
-import Coin from "@/components/Coin";
+import Coin from '@/components/Coin'
+import CoinList from '@/components/CoinList'
 
 Vue.use(Router)
 
@@ -12,6 +13,11 @@ export default new Router({
       path: "/",
       name: "front",
       component: Front
+    },
+    {
+      path: "/list",
+      name: "list",
+      component: CoinList
     },
     {
       path: "/coin/:coin",

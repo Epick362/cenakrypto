@@ -65,6 +65,14 @@
               </div>
             </router-link>
           </div>
+
+          <router-link
+            class="button primary-button"
+            :to="{name: 'list'}"
+          >
+            <i class="fas fa-list-ol"></i>
+            Zobraziť všetky kryptomeny
+          </router-link>
         </div>
       </div>
     </section>
@@ -146,6 +154,26 @@ export default {
 <style lang="scss" scoped>
 @import "~bulma/sass/utilities/mixins";
 @import '../assets/variables';
+
+.primary-button {
+  display: inline-block;
+  margin: 2rem auto 0 auto;
+  background: lighten($palette-accent, 10%);
+  border: none;
+  border-radius: 40px;
+  padding: 1rem 2.5rem;
+  height: auto;
+  color: $palette-text;
+  transition: 300ms all ease-in-out;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+
+  &:hover {
+    background: lighten($palette-hero, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.3);
+  }
+}
 
 .top-currencies {
   margin: 2rem 0;

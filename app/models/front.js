@@ -4,6 +4,13 @@ let cache = require('../cache')
 
 class Front {
     static index() {
+        return this.list()
+        .then(coins => {
+            return coins.splice(0, 10);
+        })
+    }
+
+    static list(page = 1) {
         let coinList = axios.get(`http://coincap.io/front`);
 
         return Promise.all([
@@ -11,10 +18,13 @@ class Front {
             cache.request('front', coinList)
         ])
         .then((promises) => {
-            let coins = promises[1].data.splice(0, 10);
+            let eurRate = promises[0];
+            let coins = promises[1].data;
 
-            coins = _.map(coins, (coin) => {
-                coin.price = +(coin.price / promises[0]).toFixed(2);
+            coins = _.map(coins, (coin, index) => {
+                coin.price = +(coin.price / eurRate).toFixed(2);
+                coin.mktcap = +(coin.mktcap / eurRate).toFixed(2);
+                coin.rank = index + 1;
 
                 return coin;
             })

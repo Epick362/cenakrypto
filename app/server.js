@@ -20,6 +20,7 @@ const port = process.env.PORT || 3100;
 const router = express.Router();
 
 router.get('/front', frontController.index);
+router.get('/list', frontController.list);
 router.get('/coins', frontController.coins);
 router.get('/coin/:coin', coinController.show);
 router.get('/coin/:coin/history/:range', coinController.history);

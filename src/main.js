@@ -11,11 +11,16 @@ import VueHighcharts from 'vue-highcharts'
 import Highcharts from 'highcharts'
 import loadStock from 'highcharts/modules/stock'
 import VModal from 'vue-js-modal'
+import Buefy from 'buefy'
+import 'buefy/lib/buefy.css'
 
 loadStock(Highcharts)
 
 Vue.config.productionTip = false
 
+Vue.use(Buefy, {
+  defaultIconPack: 'fas',
+})
 Vue.use(VueHighcharts, { Highcharts })
 Vue.use(VTooltip)
 Vue.use(VModal, { dialog: true })
