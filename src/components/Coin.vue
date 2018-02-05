@@ -32,13 +32,6 @@
 
           <div class="columns currency-details">
             <div class="column">
-              <div class="currency-detail-price" v-bind:class="[priceStats.change >= 0 ? 'green' : 'red']">
-                {{ priceStats.change | formatNumbers(2) }}
-                <span class="muted-text">€</span>
-              </div>
-              <div class="currency-detail-type">Zmena / {{ chartRange.text }}</div>
-            </div>
-            <div class="column">
               <div class="currency-detail-price">
                 {{ priceStats.low | formatNumbers(2) }}
                 <span class="muted-text">€</span>
@@ -79,8 +72,15 @@
     <section class="section container currency-chart">
       <h2 class="chart-title">
         Vývoj ceny
-        <span class="is-pulled-right">
-          <pretty-change-perc :percent="priceStats.change_percent"></pretty-change-perc>
+        <span class="chart-title-right">
+          Zmena / {{ chartRange.text }}
+          <b v-bind:class="[priceStats.change >= 0 ? 'green' : 'red']">
+            {{ priceStats.change | formatNumbers(2) }} <span class="muted-text">€</span>
+          </b>
+          <pretty-change-perc :percent="priceStats.change_percent">
+            <span slot="pre">(</span>
+            <span slot="post">)</span>
+          </pretty-change-perc>
         </span>
         
       </h2>
@@ -375,6 +375,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "~bulma/sass/utilities/mixins";
 @import '../assets/variables';
 
 .red {
@@ -386,8 +387,21 @@ export default {
 }
 
 .chart-title {
+  position: relative;
   font-size: 2rem;
   margin: 1rem 0;
+
+  .chart-title-right {
+    position: absolute;
+    font-size: 1.2rem;
+    bottom: 0;
+    right: 0;
+
+    @include mobile() {
+      position: initial;
+      float: right;
+    }
+  }
 }
 
 .currency-name {

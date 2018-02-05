@@ -1,7 +1,8 @@
 <template>
     <span class="percent-change" :class="[type(percent), getChangeIntensity(percent), bold ? 'bold' : '']">
+        <slot name="pre"></slot>
         <span v-if="percent > 0">+</span>{{ percent | formatNumbers(2) }}%
-        <slot></slot>
+        <slot name="post"></slot>
     </span>
 </template>
 

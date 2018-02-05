@@ -42,8 +42,10 @@
               </div>
               <div class="currency-change">
                 <pretty-change-perc :percent="currency.perc">
-                  <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
-                  <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+                  <span slot="post">
+                    <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
+                    <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+                  </span>
                 </pretty-change-perc>
               </div>
             </router-link>
@@ -74,8 +76,10 @@
               </div>
               <div class="currency-change">
                 <pretty-change-perc :percent="currency.perc">
-                  <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
-                  <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+                  <span slot="post">
+                    <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
+                    <i v-if="currency.perc < 0" class="fas fa-chevron-down" />
+                  </span>
                 </pretty-change-perc>
               </div>
             </router-link>
@@ -194,10 +198,12 @@ export default {
 
 .top-currencies {
   margin: 2rem 0;
+  min-height: 240px;
 }
 
 .small-currencies {
   margin: 2rem 0;
+  min-height: 160px;
 }
 
 .brand-heading {
