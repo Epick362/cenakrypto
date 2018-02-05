@@ -27,6 +27,7 @@
             :data="currencies"
             :loading="loading"
             hoverable
+            striped
             paginated
             backend-pagination
             :total="total"
@@ -39,7 +40,7 @@
             @sort="onSort"
           >
             <template slot-scope="props">
-              <b-table-column field="mktcap" label="Pozícia" numeric sortable>
+              <b-table-column field="mktcap" label="Poradie" numeric sortable>
                 {{ props.row.rank }}.
               </b-table-column>
 
@@ -59,7 +60,7 @@
               </b-table-column>
 
               <b-table-column field="mktcap" label="Kapitalizácia" numeric sortable>
-                {{ props.row.mktcap | formatNumbers(0) }} €
+                <b>{{ props.row.mktcap | formatNumbers(0) }}</b> €
               </b-table-column>
 
               <b-table-column field="price" label="Cena" numeric sortable>

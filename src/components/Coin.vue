@@ -21,8 +21,8 @@
               <i class="fas fa-question-circle"></i>
             </span>
             <span class="currency-price">
-              {{ coinData.price }}
-              <span class="euro-sign">€</span>
+              {{ coinData.price | formatNumbers(2) }}
+              <span class="muted-text">€</span>
             </span>
             <span class="currency-change" v-bind:class="[coinData.cap24hrChange >= 0 ? 'green' : 'red']">
               
@@ -33,35 +33,36 @@
           <div class="columns currency-details">
             <div class="column">
               <div class="currency-detail-price" v-bind:class="[priceStats.change >= 0 ? 'green' : 'red']">
-                € {{ priceStats.change }}
+                {{ priceStats.change | formatNumbers(2) }}
+                <span class="muted-text">€</span>
               </div>
               <div class="currency-detail-type">Zmena / {{ chartRange.text }}</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
-                {{ priceStats.low }}
-                <span class="euro-sign">€</span>
+                {{ priceStats.low | formatNumbers(2) }}
+                <span class="muted-text">€</span>
               </div>
               <div class="currency-detail-type">Min. / {{ chartRange.text }}</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
-                {{ priceStats.high }}
-                <span class="euro-sign">€</span>
+                {{ priceStats.high | formatNumbers(2) }}
+                <span class="muted-text">€</span>
               </div>
               <div class="currency-detail-type">Max. / {{ chartRange.text }}</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
                 {{ marketStats.volume }}
-                <span class="euro-sign">€</span>
+                <span class="muted-text">€</span>
               </div>
               <div class="currency-detail-type">24h objem</div>
             </div>
             <div class="column">
               <div class="currency-detail-price">
                 {{ marketStats.cap }}
-                <span class="euro-sign">€</span>
+                <span class="muted-text">€</span>
               </div>
               <div class="currency-detail-type">
                 Kapitalizácia
@@ -131,7 +132,7 @@ export default {
       let low = _.minBy(this.priceData, (price) => price[1])[1];
       let high = _.maxBy(this.priceData, (price) => price[1])[1];
       let change = this.priceData[this.priceData.length - 1][1] - this.priceData[0][1];
-      let change_percent = change * 100 / low;
+      let change_percent = (change  / this.priceData[0][1]) * 100;
 
       return {
         change: +(change).toFixed(2),
@@ -387,11 +388,6 @@ export default {
 .chart-title {
   font-size: 2rem;
   margin: 1rem 0;
-}
-
-.euro-sign {
-  color: darken($palette-text, 20%);
-  margin-right: 5px;
 }
 
 .currency-name {

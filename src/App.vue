@@ -26,6 +26,11 @@ body {
   font-family: "Montserrat",sans-serif;
 }
 
+.muted-text {
+  color: fade-out($palette-text, 0.4);
+  margin-right: 5px;
+}
+
 .tooltip-icon {
   color: #888;
 }

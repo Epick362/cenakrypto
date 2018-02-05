@@ -29,9 +29,17 @@
                 {{ currency.short }}
               </div>
               <div class="currency-name-long">
-                {{ index + 1 }}. {{ currency.long }}
+                <span class="muted-text">
+                  {{ index + 1 }}. 
+                </span>
+                {{ currency.long }}
               </div>
-              <div class="current-price">€ {{ (currency.price) }}</div>
+              <div class="current-price">
+                {{ currency.price | formatNumbers(2) }}
+                <span class="muted-text">
+                  €
+                </span>
+              </div>
               <div class="currency-change">
                 <pretty-change-perc :percent="currency.perc">
                   <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
@@ -58,7 +66,12 @@
                 </coin-icon>
                 {{ currency.short }}
                 </div>
-              <div class="current-price">€ {{ currency.price }}</div>
+              <div class="current-price">
+                {{ currency.price | formatNumbers(2) }}
+                <span class="muted-text">
+                  €
+                </span>
+              </div>
               <div class="currency-change">
                 <pretty-change-perc :percent="currency.perc">
                   <i v-if="currency.perc >= 0" class="fas fa-chevron-up" />
@@ -260,7 +273,6 @@ export default {
   .current-price {
     font-size: 2.5rem;
     font-weight: 700;
-    letter-spacing: -2px;
     margin: 0.3rem 0;
   }
 
