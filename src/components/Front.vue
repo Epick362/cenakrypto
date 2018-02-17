@@ -96,6 +96,10 @@
       </div>
     </section>
 
+    <section class="section container">
+      <steemit tag="crypto"></steemit>
+    </section>
+
     <section id="faq" class="section container crypto-faq">
       <h2 class="title">Čo je kryptomena?</h2>
       <p>
@@ -141,6 +145,7 @@ import Navbar from '@/components/Navbar'
 import PageFooter from '@/components/PageFooter'
 import Cta from '@/components/Cta'
 import CoinIcon from '@/components/CoinIcon'
+import Steemit from '@/components/Steemit/Steemit'
 import PrettyChangePerc from '@/components/PrettyChangePerc'
 import { API_ROOT } from '@/constants'
 
@@ -166,7 +171,8 @@ export default {
     PageFooter,
     Cta,
     CoinIcon,
-    PrettyChangePerc
+    PrettyChangePerc,
+    Steemit
   }
 }
 </script>
